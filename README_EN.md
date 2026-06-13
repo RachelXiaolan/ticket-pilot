@@ -74,6 +74,39 @@ When you first use Ticket Pilot, the agent will:
 
 After that, creating issues uses your defaults automatically. Override anytime by specifying explicitly.
 
+## Quick Start
+
+After setup, just tell your agent in natural language that you want to work on an issue:
+
+```
+Start working on AI-2090
+```
+
+Or be more explicit:
+
+```
+Use ticket-pilot on AI-2090, I need to fix the install instructions in README
+```
+
+The agent will then automatically:
+1. Read the Linear issue (title, description, current status)
+2. Move status → In Progress, post a "starting" comment
+3. Do the work, posting phase-based progress comments (mirrored to Linear + GitHub)
+4. On completion, status → In Review / Done, post a completion comment
+
+### Common triggers
+
+| You say | Agent does |
+|---------|-----------|
+| `Start working on AI-2090` | Read issue → In Progress → get to work |
+| `Use ticket-pilot on AI-2090` | Same, explicitly loads the skill |
+| `AI-2090 I'm done with the fix` | Verify → In Review → completion comment |
+| `AI-2090 is done, close it` | Done → completion comment |
+| `Create an issue: fix login bug` | Create with your default team/project/label → sync to GitHub |
+| `What's the team working on?` | List teammates' active issues summary |
+
+> 💡 No commands to memorize — just natural language. The agent loads this skill based on context.
+
 ## How It Works
 
 ```
