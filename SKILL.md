@@ -33,17 +33,27 @@ framework. It works with whatever auth and tools the agent's environment provide
 
 ### Agent compatibility
 
-This skill uses the [Agent Skills open standard](https://github.com/anthropics/skills).
+This skill uses the [Agent Skills open standard](https://agentskills.io).
 Any agent that supports `SKILL.md` + YAML frontmatter can use it.
 
-| Agent | Skills directory | How to install |
-|-------|-----------------|----------------|
-| Claude Code | `~/.claude/skills/` | `cp -r ticket-pilot/ ~/.claude/skills/` |
-| Codex | `~/.codex/skills/` | `cp -r ticket-pilot/ ~/.codex/skills/` |
-| Hermes | `~/.hermes/skills/` | `cp -r ticket-pilot/ ~/.hermes/skills/productivity/` |
-| OpenClaw | `~/.openclaw/skills/` | `cp -r ticket-pilot/ ~/.openclaw/skills/` |
-| Cursor | `.cursor/skills/` | `cp -r ticket-pilot/ .cursor/skills/` |
-| Gemini CLI | `.gemini/skills/` | `cp -r ticket-pilot/ .gemini/skills/` |
+Install with curl (recommended):
+```bash
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash -s -- --agent claude
+```
+
+Or via skills.sh:
+```bash
+npx skills add RachelXiaolan/ticket-pilot
+```
+
+| Agent | Skills directory |
+|-------|-----------------|
+| Claude Code | `~/.claude/skills/` |
+| Codex | `~/.codex/skills/` |
+| Hermes | `~/.hermes/skills/productivity/` |
+| OpenClaw | `~/.openclaw/skills/` |
+| Cursor | `.cursor/skills/` |
+| Gemini CLI | `.gemini/skills/` |
 
 The agent using this skill should identify itself by name in progress comments
 (e.g. "Hermes agent", "Claude Code", "Codex") so team members know who did what.

@@ -9,24 +9,49 @@ Ticket Pilot lets any AI agent (Hermes, Claude Code, Codex, OpenClaw, Cursor, Ge
 - Tracks status on Linear (source of truth)
 - Optionally creates branches/PRs when code is involved
 
-## Quick Install
+## Installation
 
-### From source
+### Option 1: curl one-liner (recommended)
+
 ```bash
-git clone https://github.com/RachelXiaolan/ticket-pilot.git
-cd ticket-pilot
+# Default: install to Claude Code
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash
+
+# Specify agent (comma-separated for multiple)
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash -s -- --agent hermes
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash -s -- --agent claude,codex,hermes
 ```
 
-### Copy to your agent's skills directory
+Available agents: `claude` `codex` `hermes` `openclaw` `cursor` `gemini`
 
-| Agent | Install command |
-|-------|----------------|
-| **Claude Code** | `cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/` |
-| **Codex** | `cp -r ticket-pilot/ ~/.codex/skills/ticket-pilot/` |
-| **Hermes** | `cp -r ticket-pilot/ ~/.hermes/skills/productivity/ticket-pilot/` |
-| **OpenClaw** | `cp -r ticket-pilot/ ~/.openclaw/skills/ticket-pilot/` |
-| **Cursor** | `cp -r ticket-pilot/ .cursor/skills/ticket-pilot/` |
-| **Gemini CLI** | `cp -r ticket-pilot/ .gemini/skills/ticket-pilot/` |
+### Option 2: Claude Code plugin marketplace
+
+```
+/plugin marketplace add RachelXiaolan/ticket-pilot
+/plugin install ticket-pilot
+```
+
+### Option 3: skills.sh CLI
+
+```bash
+npx skills add RachelXiaolan/ticket-pilot
+```
+
+### Option 4: Manual
+
+```bash
+git clone https://github.com/RachelXiaolan/ticket-pilot.git
+cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/    # swap in your agent's path
+```
+
+| Agent | Skills directory |
+|-------|-----------------|
+| Claude Code | `~/.claude/skills/` |
+| Codex | `~/.codex/skills/` |
+| Hermes | `~/.hermes/skills/productivity/` |
+| OpenClaw | `~/.openclaw/skills/` |
+| Cursor | `.cursor/skills/` |
+| Gemini CLI | `.gemini/skills/` |
 
 ## Prerequisites
 

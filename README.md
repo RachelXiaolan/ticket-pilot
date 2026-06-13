@@ -9,24 +9,49 @@ Ticket Pilot 让任何 AI Agent（Hermes、Claude Code、Codex、OpenClaw、Curs
 - 在 Linear 上追踪状态（Linear 是唯一真相源）
 - 涉及写代码时，可选创建 branch / commit / PR
 
-## 快速安装
+## 安装
 
-### 从源码安装
+### 方式一：curl 一键安装（推荐）
+
 ```bash
-git clone https://github.com/RachelXiaolan/ticket-pilot.git
-cd ticket-pilot
+# 默认装到 Claude Code
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash
+
+# 指定 agent（逗号分隔可装多个）
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash -s -- --agent hermes
+curl -fsSL https://raw.githubusercontent.com/RachelXiaolan/ticket-pilot/main/install.sh | bash -s -- --agent claude,codex,hermes
 ```
 
-### 复制到你使用的 Agent 的 skills 目录
+可选 agent：`claude` `codex` `hermes` `openclaw` `cursor` `gemini`
 
-| Agent | 安装命令 |
-|-------|---------|
-| **Claude Code** | `cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/` |
-| **Codex** | `cp -r ticket-pilot/ ~/.codex/skills/ticket-pilot/` |
-| **Hermes** | `cp -r ticket-pilot/ ~/.hermes/skills/productivity/ticket-pilot/` |
-| **OpenClaw** | `cp -r ticket-pilot/ ~/.openclaw/skills/ticket-pilot/` |
-| **Cursor** | `cp -r ticket-pilot/ .cursor/skills/ticket-pilot/` |
-| **Gemini CLI** | `cp -r ticket-pilot/ .gemini/skills/ticket-pilot/` |
+### 方式二：Claude Code 插件市场
+
+```
+/plugin marketplace add RachelXiaolan/ticket-pilot
+/plugin install ticket-pilot
+```
+
+### 方式三：skills.sh CLI
+
+```bash
+npx skills add RachelXiaolan/ticket-pilot
+```
+
+### 方式四：手动安装
+
+```bash
+git clone https://github.com/RachelXiaolan/ticket-pilot.git
+cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/    # 换成你的 agent 路径
+```
+
+| Agent | Skills 目录 |
+|-------|------------|
+| Claude Code | `~/.claude/skills/` |
+| Codex | `~/.codex/skills/` |
+| Hermes | `~/.hermes/skills/productivity/` |
+| OpenClaw | `~/.openclaw/skills/` |
+| Cursor | `.cursor/skills/` |
+| Gemini CLI | `.gemini/skills/` |
 
 ## 前置条件
 
