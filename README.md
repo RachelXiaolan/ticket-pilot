@@ -11,12 +11,13 @@ Ticket Pilot 让任何 AI Agent（Hermes、Claude Code、Codex、OpenClaw、Curs
 
 ## 快速安装
 
-### 一次装到所有 Agent（通用安装器）
+### 从源码安装
 ```bash
-npx agent-skills-cli install
+git clone https://github.com/RachelXiaolan/ticket-pilot.git
+cd ticket-pilot
 ```
 
-### 手动安装 — 选择你的 Agent
+### 复制到你使用的 Agent 的 skills 目录
 
 | Agent | 安装命令 |
 |-------|---------|
@@ -26,13 +27,6 @@ npx agent-skills-cli install
 | **OpenClaw** | `cp -r ticket-pilot/ ~/.openclaw/skills/ticket-pilot/` |
 | **Cursor** | `cp -r ticket-pilot/ .cursor/skills/ticket-pilot/` |
 | **Gemini CLI** | `cp -r ticket-pilot/ .gemini/skills/ticket-pilot/` |
-
-### 从源码安装
-```bash
-git clone https://github.com/RachelXiaolan/ticket-pilot.git
-cd ticket-pilot
-# 然后复制到你使用的 Agent 的 skills 目录（见上表）
-```
 
 ## 前置条件
 

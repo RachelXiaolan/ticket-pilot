@@ -11,12 +11,13 @@ Ticket Pilot lets any AI agent (Hermes, Claude Code, Codex, OpenClaw, Cursor, Ge
 
 ## Quick Install
 
-### All agents at once (universal installer)
+### From source
 ```bash
-npx agent-skills-cli install
+git clone https://github.com/RachelXiaolan/ticket-pilot.git
+cd ticket-pilot
 ```
 
-### Manual install — pick your agent
+### Copy to your agent's skills directory
 
 | Agent | Install command |
 |-------|----------------|
@@ -26,13 +27,6 @@ npx agent-skills-cli install
 | **OpenClaw** | `cp -r ticket-pilot/ ~/.openclaw/skills/ticket-pilot/` |
 | **Cursor** | `cp -r ticket-pilot/ .cursor/skills/ticket-pilot/` |
 | **Gemini CLI** | `cp -r ticket-pilot/ .gemini/skills/ticket-pilot/` |
-
-### From source
-```bash
-git clone https://github.com/RachelXiaolan/ticket-pilot.git
-cd ticket-pilot
-# Then copy to your agent's skills directory (see table above)
-```
 
 ## Prerequisites
 

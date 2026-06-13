@@ -45,11 +45,6 @@ Any agent that supports `SKILL.md` + YAML frontmatter can use it.
 | Cursor | `.cursor/skills/` | `cp -r ticket-pilot/ .cursor/skills/` |
 | Gemini CLI | `.gemini/skills/` | `cp -r ticket-pilot/ .gemini/skills/` |
 
-Or install to all agents at once:
-```bash
-npx agent-skills-cli install
-```
-
 The agent using this skill should identify itself by name in progress comments
 (e.g. "Hermes agent", "Claude Code", "Codex") so team members know who did what.
 
