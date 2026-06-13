@@ -1,25 +1,25 @@
 # Ticket Pilot 🎫✈️
 
-**Multi-agent skill for Linear ↔ GitHub issue sync.**
+**多 Agent 通用的 Linear ↔ GitHub issue 同步 Skill。**
 
-Ticket Pilot lets any AI agent (Hermes, Claude Code, Codex, OpenClaw, Cursor, Gemini CLI) coordinate Linear issue work with GitHub-backed tracking. When you work on a Linear issue, the agent automatically:
+Ticket Pilot 让任何 AI Agent（Hermes、Claude Code、Codex、OpenClaw、Cursor、Gemini CLI）都能在处理 Linear issue 时自动与 GitHub 保持同步。当你开始处理一个 Linear issue 时，Agent 会自动：
 
-- Creates a linked GitHub issue (1:1 mirror)
-- Posts progress comments to **both** platforms at phase boundaries
-- Tracks status on Linear (source of truth)
-- Optionally creates branches/PRs when code is involved
+- 在 GitHub 创建对应的镜像 issue（1:1 映射）
+- 在**两个平台**同步发布进度评论（按阶段更新，不是每步都发）
+- 在 Linear 上追踪状态（Linear 是唯一真相源）
+- 涉及写代码时，可选创建 branch / commit / PR
 
-## Quick Install
+## 快速安装
 
-### All agents at once (universal installer)
+### 一次装到所有 Agent（通用安装器）
 ```bash
 npx agent-skills-cli install
 ```
 
-### Manual install — pick your agent
+### 手动安装 — 选择你的 Agent
 
-| Agent | Install command |
-|-------|----------------|
+| Agent | 安装命令 |
+|-------|---------|
 | **Claude Code** | `cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/` |
 | **Codex** | `cp -r ticket-pilot/ ~/.codex/skills/ticket-pilot/` |
 | **Hermes** | `cp -r ticket-pilot/ ~/.hermes/skills/productivity/ticket-pilot/` |
@@ -27,98 +27,108 @@ npx agent-skills-cli install
 | **Cursor** | `cp -r ticket-pilot/ .cursor/skills/ticket-pilot/` |
 | **Gemini CLI** | `cp -r ticket-pilot/ .gemini/skills/ticket-pilot/` |
 
-### From source
+### 从源码安装
 ```bash
 git clone https://github.com/RachelXiaolan/ticket-pilot.git
 cd ticket-pilot
-# Then copy to your agent's skills directory (see table above)
+# 然后复制到你使用的 Agent 的 skills 目录（见上表）
 ```
 
-## Prerequisites
+## 前置条件
 
 ### Linear
-- Personal API key from https://linear.app/settings/account/security → Personal API keys
-- Set as `LINEAR_API_KEY` environment variable
+- 在 https://linear.app/settings/account/security → Personal API keys 创建个人 API key
+- 设置为环境变量 `LINEAR_API_KEY`
 
-### GitHub (any one)
-- **gh CLI** (preferred): `gh auth login`
-- **Personal Access Token**: set as `GITHUB_TOKEN`
-- **GitHub MCP / App**: if already configured
+### GitHub（三选一）
+- **gh CLI**（推荐）：运行 `gh auth login`
+- **Personal Access Token**：设置为环境变量 `GITHUB_TOKEN`
+- **GitHub MCP / App**：如果已经配置过，可直接使用
 
-## First Run
+## 首次使用
 
-When you first use Ticket Pilot, the agent will:
-1. Verify Linear + GitHub auth
-2. Auto-discover your workspace: teams, projects, labels, users
-3. Ask you to choose defaults (team, project, label, assignee)
-4. Save to `~/.ticket-pilot/settings.md`
+首次使用 Ticket Pilot 时，Agent 会：
+1. 验证 Linear + GitHub 认证
+2. 自动发现你的工作区信息：team、project、label、用户
+3. 让你选择默认值（team、project、label、assignee）
+4. 保存到 `~/.ticket-pilot/settings.md`
 
-After that, creating issues uses your defaults automatically. Override anytime by specifying explicitly.
+之后创建 issue 时自动使用默认值。创建时直接说明即可覆盖默认值（如"在 SBY team 建个 issue"、"assign 给 Leo"）。
 
-## How It Works
+## 工作原理
 
 ```
-Linear Issue (source of truth)
-  ├── status / priority / assignee / label
-  ├── progress comments ──→ mirrored to GitHub issue
+Linear Issue（唯一真相源）
+  ├── 状态 / 优先级 / assignee / label
+  ├── 进度评论 ──→ 镜像到 GitHub issue
   │
-  └── ←── links ──→ GitHub Issue (mirror)
-                        ├── same comments
-                        ├── (optional) branch + commit + PR
-                        └── (optional) labels / assignees
+  └── ←── 链接 ──→ GitHub Issue（镜像）
+                       ├── 同步的评论
+                       ├──（可选）branch + commit + PR
+                       └──（可选）labels / assignees
 ```
 
-### Comment style
-- **Phase-based, not prompt-based** — group related steps, comment when a phase ends
-- **Every comment includes**: who did it (agent name), what happened, key outputs (links)
-- Concise and scannable. No walls of text.
+### 评论风格
+- **按阶段更新，不按 prompt 更新** — 多个相关步骤属于同一阶段时，等阶段结束再发一条评论
+- **每条评论必须包含**：谁做的（Agent 名称）、做了什么、关键产出（链接）
+- 简洁、可扫读，不要大段文字
 
-### Issue creation
-- Follows your team's naming convention (auto-detected)
-- Applies your default label + assignee
-- Creates GitHub issue simultaneously with link back to Linear
+### Issue 创建
+- 自动检测并遵循你 team 的命名规范
+- 自动应用你的默认 label + assignee
+- 同时在 GitHub 创建对应 issue，互相链接
 
-## Supported Agents
+## 支持的 Agent
 
-Ticket Pilot uses the [Agent Skills open standard](https://github.com/anthropics/skills) (`SKILL.md` + YAML frontmatter). Any agent that supports this standard can use it.
+Ticket Pilot 使用 [Agent Skills 开放标准](https://github.com/anthropics/skills)（`SKILL.md` + YAML frontmatter）。任何支持此标准的 Agent 都可以使用。
 
-| Agent | Skills directory | Activation |
-|-------|-----------------|------------|
-| Claude Code | `~/.claude/skills/` | Native |
-| OpenAI Codex | `~/.codex/skills/` | Auto-discovery |
-| Hermes Agent | `~/.hermes/skills/` | Native |
-| OpenClaw | `~/.openclaw/skills/` | YAML frontmatter triggers |
+| Agent | Skills 目录 | 激活方式 |
+|-------|-----------|---------|
+| Claude Code | `~/.claude/skills/` | 原生支持 |
+| OpenAI Codex | `~/.codex/skills/` | 自动发现 |
+| Hermes Agent | `~/.hermes/skills/` | 原生支持 |
+| OpenClaw | `~/.openclaw/skills/` | YAML frontmatter 触发 |
 | Cursor | `.cursor/skills/` | `@ticket-pilot` |
 | Gemini CLI | `.gemini/skills/` | `activate_skill()` |
 
-## File Structure
+## 文件结构
 
 ```
 ticket-pilot/
-├── SKILL.md                          # Main skill instructions
-├── README.md                         # This file
+├── SKILL.md                          # 主技能文件
+├── README.md                         # 本文件（中文版）
+├── README_EN.md                      # 英文版
 ├── references/
-│   ├── onboarding-settings.md        # First-run setup format
-│   ├── state-model.md                # Linear status mapping
-│   ├── github-conventions.md         # Branch/commit/PR conventions
-│   └── workflow-template.md          # Validated workflow examples
+│   ├── onboarding-settings.md        # 首次配置格式
+│   ├── state-model.md                # Linear 状态映射
+│   ├── github-conventions.md         # branch/commit/PR 约定
+│   └── workflow-template.md          # 验证过的工作流示例
 └── scripts/
-    ├── init_task_record.py           # Task artifact skeleton
-    └── sync_comment.py               # Post comment to both platforms
+    ├── init_task_record.py           # task artifact 骨架
+    └── sync_comment.py               # 双平台评论同步
 ```
 
-## Auth Compatibility
+## 认证兼容性
 
 | Agent | Linear | GitHub |
 |-------|--------|--------|
-| All agents | `$LINEAR_API_KEY` (env var) | `$GITHUB_TOKEN` (env var) or `gh auth` (CLI) |
+| 所有 Agent | `$LINEAR_API_KEY`（环境变量） | `$GITHUB_TOKEN`（环境变量）或 `gh auth`（CLI） |
 
-The skill auto-detects which GitHub auth method is available and uses it. No agent-specific configuration needed.
+Skill 会自动检测可用的 GitHub 认证方式并使用，无需 Agent 专属配置。
+
+## 技术债（待实现）
+
+以下功能在团队 GitHub org 环境下需要实现（当前 MVP 暂缓）：
+
+- **GitHub label 映射** — Linear label ↔ GitHub label 对应关系
+- **GitHub assignee 映射** — Linear 用户 ↔ GitHub 用户名对应关系
+- **GitHub Project 映射** — Linear project ↔ GitHub Project (v2) 对应关系
+- **Org 级 onboarding** — 在团队 org 下发现成员/label/project，让用户选择默认值
 
 ## License
 
 MIT
 
-## Author
+## 作者
 
 Rachel Lu (@RachelXiaolan)
