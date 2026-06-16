@@ -434,26 +434,17 @@ Linear free-tier workspaces have a cap on **active issues**. When the limit is r
 
 ### Codex CLI — sandbox blocks network by default
 
-Codex CLI runs in a **sandbox** by default (`workspace-write` mode). In this mode,
-**network access is OFF**. The Linear API (`api.linear.app`) and GitHub API calls will fail
-with DNS resolution errors, and Codex's escalation request will be auto-rejected as
-"high-risk operation".
+Codex CLI runs in a sandbox with **network access off** by default. Linear/GitHub API
+calls fail with DNS errors, and escalation requests get auto-rejected.
 
-**Fix:** Add to `~/.codex/config.toml`:
-
-```toml
-[sandbox_workspace_write]
-network_access = true
-```
-
-This keeps filesystem sandbox protection but enables network — required for ticket-pilot
-to reach Linear and GitHub APIs.
-
-Alternatively, run a one-off session with full access:
+**Fix:** Set Codex's approval policy to default-permit (Auto Review → default permissions),
+or launch with `--full-auto`:
 
 ```bash
-codex --sandbox danger-full-access "用 ticket-pilot 处理 AI-2090"
+codex --full-auto "Use ticket-pilot on AI-2090"
 ```
+
+This is a Codex-wide sandbox setting — other agents don't have this issue.
 
 ### Settings auto-discovery
 

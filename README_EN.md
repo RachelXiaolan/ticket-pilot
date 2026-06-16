@@ -64,6 +64,19 @@ cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/    # swap in your agent's pat
 - **Personal Access Token**: set as `GITHUB_TOKEN`
 - **GitHub MCP / App**: if already configured
 
+### Codex users ⚠️
+
+Codex runs in a sandbox with **network disabled by default** — Linear/GitHub API calls will fail. Before starting, set Codex's approval policy to allow by default:
+
+> Codex Settings → Auto Review → set to default permissions
+
+Or launch with a flag:
+```bash
+codex --full-auto "Use ticket-pilot on AI-2090"
+```
+
+> Other agents (Hermes / Claude Code / Cursor, etc.) don't have this issue.
+
 ## First Run
 
 When you first use Ticket Pilot, the agent will:
