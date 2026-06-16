@@ -212,9 +212,12 @@ Summary: **Default to the user, ask when uncertain.**
 | "建个 issue：xxx" | **Create** | Create new issue + GitHub mirror. |
 | Unclear | **Ask** | "你是想让我看一下这个 issue，还是开始做？" |
 
-**Critical:** When in doubt, default to **read-only**. Changing issue status, posting comments,
-and creating GitHub issues are **write actions** that the user must explicitly trigger —
-either by saying "开始/处理/做" or by confirming when asked.
+**Critical:** When in doubt, default to **read-only**. Entering the Start Workflow —
+changing issue status, creating a GitHub issue, posting the "starting" comment — requires
+an explicit trigger ("开始/处理/做/work on/start").
+
+Once work HAS started, **phase-based progress comments are automatic** (see "Comment principles"
+below) — the agent does not need to ask before posting milestone updates.
 
 Never assume the user wants to start working just because they mentioned an issue.
 A user saying "看一下 AI-2107" means "read and summarize it" — that's it.

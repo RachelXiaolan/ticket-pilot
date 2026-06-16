@@ -120,9 +120,9 @@ The agent will then automatically:
 | `Create an issue: fix login bug` | Create with your default team/project/label → sync to GitHub |
 | Unclear | Agent asks: "Do you want me to just look at this, or start working?" |
 
-> 💡 **"Take a look" ≠ "Start working".** The agent won't change status, post comments,
-> or create GitHub issues just because you mentioned an issue. Only explicit
-> "start/work on/handle" triggers the full workflow.
+> 💡 **"Take a look" ≠ "Start working".** The agent won't change status or create GitHub
+> issues just because you mentioned an issue. Only explicit "start/work on/handle" triggers
+> the full workflow. Once started, phase-based progress comments are **automatic**.
 
 ## How It Works
 
