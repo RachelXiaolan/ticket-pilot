@@ -111,14 +111,18 @@ The agent will then automatically:
 
 | You say | Agent does |
 |---------|-----------|
+| `Take a look at AI-2090` / `what's AI-2090 about` | **Read-only**: read and summarize, change nothing |
+| `What's the team working on?` | **Read-only**: list teammates' active issues summary |
 | `Start working on AI-2090` | Read issue → In Progress → get to work |
 | `Use ticket-pilot on AI-2090` | Same, explicitly loads the skill |
 | `AI-2090 I'm done with the fix` | Verify → In Review → completion comment |
 | `AI-2090 is done, close it` | Done → completion comment |
 | `Create an issue: fix login bug` | Create with your default team/project/label → sync to GitHub |
-| `What's the team working on?` | List teammates' active issues summary |
+| Unclear | Agent asks: "Do you want me to just look at this, or start working?" |
 
-> 💡 No commands to memorize — just natural language. The agent loads this skill based on context.
+> 💡 **"Take a look" ≠ "Start working".** The agent won't change status, post comments,
+> or create GitHub issues just because you mentioned an issue. Only explicit
+> "start/work on/handle" triggers the full workflow.
 
 ## How It Works
 

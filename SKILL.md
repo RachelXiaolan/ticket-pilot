@@ -199,7 +199,30 @@ When creating or updating Linear issues, always apply labels and assignees expli
 
 Summary: **Default to the user, ask when uncertain.**
 
+## Intent Detection — Read vs Write
+
+**Before doing anything**, determine the user's intent:
+
+| User says | Intent | What to do |
+|-----------|--------|------------|
+| "看一下 AI-2090" / "看看这个 issue" / "什么情况" | **Read-only** | Read the issue, summarize it, STOP. Do NOT change status, post comments, create GitHub issues, or start working. |
+| "帮我看看团队在做什么" / "看看大家进度" | **Read-only** | Query and summarize team status. Do NOT modify anything. |
+| "开始做 AI-2090" / "处理 AI-2090" / "搞一下这个" | **Start work** | Run the full Start Workflow below. |
+| "AI-2090 做完了" / "改完了" | **Complete work** | Verify, move to In Review/Done, post completion comment. |
+| "建个 issue：xxx" | **Create** | Create new issue + GitHub mirror. |
+| Unclear | **Ask** | "你是想让我看一下这个 issue，还是开始做？" |
+
+**Critical:** When in doubt, default to **read-only**. Changing issue status, posting comments,
+and creating GitHub issues are **write actions** that the user must explicitly trigger —
+either by saying "开始/处理/做" or by confirming when asked.
+
+Never assume the user wants to start working just because they mentioned an issue.
+A user saying "看一下 AI-2107" means "read and summarize it" — that's it.
+
 ## Start Workflow
+
+**Only enter this workflow when the user explicitly says to start work**
+(e.g. "开始做", "处理", "搞一下", "work on", "start").
 
 1. **Resolve the target Linear issue** from the user request.
    - Accept issue IDs like `AI-2090`, Linear URLs, or a query like "my current issue".
