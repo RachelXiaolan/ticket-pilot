@@ -432,6 +432,29 @@ Linear free-tier workspaces have a cap on **active issues**. When the limit is r
 
 **Before creating issues during onboarding or MVP demos**, check the workspace is not at capacity. If it is, the user must archive/close existing issues or upgrade the plan. Do not retry `issueCreate` after this error — it will keep failing until the workspace is under quota.
 
+### Codex CLI — sandbox blocks network by default
+
+Codex CLI runs in a **sandbox** by default (`workspace-write` mode). In this mode,
+**network access is OFF**. The Linear API (`api.linear.app`) and GitHub API calls will fail
+with DNS resolution errors, and Codex's escalation request will be auto-rejected as
+"high-risk operation".
+
+**Fix:** Add to `~/.codex/config.toml`:
+
+```toml
+[sandbox_workspace_write]
+network_access = true
+```
+
+This keeps filesystem sandbox protection but enables network — required for ticket-pilot
+to reach Linear and GitHub APIs.
+
+Alternatively, run a one-off session with full access:
+
+```bash
+codex --sandbox danger-full-access "用 ticket-pilot 处理 AI-2090"
+```
+
 ### Settings auto-discovery
 
 During onboarding, **proactively query** the workspace to auto-fill settings rather than asking the user to type IDs. Query in this order:
