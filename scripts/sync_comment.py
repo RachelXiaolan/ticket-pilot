@@ -30,14 +30,28 @@ def linear_comment(issue_id: str, body: str) -> str | None:
         print("⚠️  LINEAR_API_KEY not set — skipping Linear comment", file=sys.stderr)
         return None
 
-    escaped = body.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
-    query = f'mutation {{ commentCreate(input: {{ issueId: "{issue_id}", body: "{escaped}" }}) {{ success comment {{ id }} }} }}'
+    # Use GraphQL variables instead of string interpolation.
+    # Previously the body was manually escaped into the query string, which is
+    # fragile — control characters (\r, \t, \x00), backticks, or unicode could
+    # break the mutation payload. Variables let the GraphQL server handle all
+    # escaping correctly.
+    query = (
+        "mutation($input: CommentCreateInput!) {"
+        "  commentCreate(input: $input) { success comment { id } }"
+        "}"
+    )
+    variables = {
+        "input": {
+            "issueId": issue_id,
+            "body": body,
+        }
+    }
 
     result = subprocess.run(
         ["curl", "-s", "-X", "POST", "https://api.linear.app/graphql",
          "-H", f"Authorization: {key}",
          "-H", "Content-Type: application/json",
-         "-d", json.dumps({"query": query})],
+         "-d", json.dumps({"query": query, "variables": variables})],
         capture_output=True, text=True, timeout=15
     )
     data = json.loads(result.stdout)
