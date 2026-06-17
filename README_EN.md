@@ -61,14 +61,12 @@ cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/    # swap in your agent's pat
 
 ### GitHub (any one)
 - **gh CLI** (preferred): `gh auth login`
-- **Fine-grained Token**: https://github.com/settings/personal-access-tokens/new
-  - Repository access: All repositories or select specific repos
-  - Permissions (all must be **Read and write**):
-    - **Issues** — create mirror issues, post comments
-    - **Contents** — branch, commit, push (when code is involved)
-    - **Pull requests** — open PRs (optional)
-    - **Metadata** — Read-only (required by default)
+- **Classic Token** (simplest): https://github.com/settings/tokens/new
+  - Just check `repo` (Full control of private repositories) — that's it
   - Set as `GITHUB_TOKEN` environment variable
+- **Fine-grained Token**: https://github.com/settings/personal-access-tokens/new
+  - Requires selecting each permission: Issues (R/W), Contents (R/W), Pull requests (R/W), Metadata (R)
+  - For teams/enterprises with strict access control
 - **GitHub MCP / App**: if already configured
 
 ### Codex users ⚠️
