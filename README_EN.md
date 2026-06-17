@@ -61,7 +61,14 @@ cp -r ticket-pilot/ ~/.claude/skills/ticket-pilot/    # swap in your agent's pat
 
 ### GitHub (any one)
 - **gh CLI** (preferred): `gh auth login`
-- **Personal Access Token**: set as `GITHUB_TOKEN`
+- **Fine-grained Token**: https://github.com/settings/personal-access-tokens/new
+  - Repository access: All repositories or select specific repos
+  - Permissions (all must be **Read and write**):
+    - **Issues** — create mirror issues, post comments
+    - **Contents** — branch, commit, push (when code is involved)
+    - **Pull requests** — open PRs (optional)
+    - **Metadata** — Read-only (required by default)
+  - Set as `GITHUB_TOKEN` environment variable
 - **GitHub MCP / App**: if already configured
 
 ### Codex users ⚠️
