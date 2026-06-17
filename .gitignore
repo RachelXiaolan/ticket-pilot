@@ -1,0 +1,24 @@
+# Task artifacts created by init_task_record.py
+tasks/
+
+# Local settings (may contain team/workspace names — keep out of VCS)
+.ticket-pilot/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo

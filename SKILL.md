@@ -10,7 +10,7 @@ description: >
 version: 3.0.0
 author: Rachel Lu
 license: MIT
-platforms: [linux, macos, windows]
+platforms: [linux, macos]
 prerequisites:
   env_vars: [LINEAR_API_KEY]
   commands: [curl]
