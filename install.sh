@@ -13,19 +13,23 @@ TMPDIR=$(mktemp -d)
 cleanup() { rm -rf "$TMPDIR"; }
 trap cleanup EXIT
 
-# Default agent mapping
-declare -A SKILL_DIRS=(
-  ["claude"]="$HOME/.claude/skills/ticket-pilot"
-  ["codex"]="$HOME/.codex/skills/ticket-pilot"
-  ["hermes"]="$HOME/.hermes/skills/productivity/ticket-pilot"
-  ["openclaw"]="$HOME/.openclaw/skills/ticket-pilot"
-  ["cursor"]=".cursor/skills/ticket-pilot"
-  ["gemini"]=".gemini/skills/ticket-pilot"
-)
+# Get skill directory for an agent name.
+# No associative arrays — bash 3.2 compatible (macOS default).
+get_skill_dir() {
+  case "$1" in
+    claude)   echo "$HOME/.claude/skills/ticket-pilot" ;;
+    codex)    echo "$HOME/.codex/skills/ticket-pilot" ;;
+    hermes)   echo "$HOME/.hermes/skills/productivity/ticket-pilot" ;;
+    openclaw) echo "$HOME/.openclaw/skills/ticket-pilot" ;;
+    cursor)   echo ".cursor/skills/ticket-pilot" ;;
+    gemini)   echo ".gemini/skills/ticket-pilot" ;;
+    *)        echo "" ;;
+  esac
+}
 
 # Parse args
 TARGETS=""
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
     --agent)
       TARGETS="$2"
@@ -50,15 +54,15 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Default to claude
-if [[ -z "$TARGETS" ]]; then
+if [ -z "$TARGETS" ]; then
   TARGETS="claude"
 fi
 
 # Download
 echo "⬇️  Downloading Ticket Pilot..."
-if command -v curl &>/dev/null; then
+if command -v curl >/dev/null 2>&1; then
   curl -fsSL "$ARCHIVE_URL" -o "$TMPDIR/skill.tar.gz"
-elif command -v wget &>/dev/null; then
+elif command -v wget >/dev/null 2>&1; then
   wget -qO "$TMPDIR/skill.tar.gz" "$ARCHIVE_URL"
 else
   echo "❌ Need curl or wget to download."
@@ -69,33 +73,37 @@ fi
 tar xzf "$TMPDIR/skill.tar.gz" -C "$TMPDIR"
 SRC_DIR="$TMPDIR/ticket-pilot-main"
 
-if [[ ! -d "$SRC_DIR" ]]; then
+if [ ! -d "$SRC_DIR" ]; then
   echo "❌ Download extraction failed."
   exit 1
 fi
 
-# Install to each target
-IFS=',' read -ra AGENTS <<< "$TARGETS"
-for agent in "${AGENTS[@]}"; do
+# Install to each target (comma-separated)
+OLDIFS="$IFS"
+IFS=','
+for agent in $TARGETS; do
+  IFS="$OLDIFS"
+  # Lowercase + trim whitespace
   agent=$(echo "$agent" | tr '[:upper:]' '[:lower:]' | xargs)
-  dir="${SKILL_DIRS[$agent]:-}"
+  dir=$(get_skill_dir "$agent")
 
-  if [[ -z "$dir" ]]; then
+  if [ -z "$dir" ]; then
     echo "⚠️  Unknown agent: $agent (skip)"
     continue
   fi
 
-  # Expand ~ and relative paths
+  # Expand ~ at start of path
   dir="${dir/#\~/$HOME}"
 
   mkdir -p "$(dirname "$dir")"
-  if [[ -d "$dir" ]]; then
+  if [ -d "$dir" ]; then
     rm -rf "$dir"
   fi
   cp -r "$SRC_DIR" "$dir"
 
   echo "✅ Installed to $agent → $dir"
 done
+IFS="$OLDIFS"
 
 echo ""
 echo "Done! Restart your agent and you're ready to use Ticket Pilot."
