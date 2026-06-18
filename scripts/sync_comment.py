@@ -54,11 +54,29 @@ def linear_comment(issue_id: str, body: str) -> str | None:
          "-d", json.dumps({"query": query, "variables": variables})],
         capture_output=True, text=True, timeout=15
     )
-    data = json.loads(result.stdout)
+
+    # Robust error handling: Linear responses come in three failure shapes,
+    # and we must never raise out of this function:
+    #   1. Non-JSON / empty stdout (network failure, 5xx HTML page) → JSONDecodeError
+    #   2. {"errors": [...]}                          → handle via .get("errors")
+    #   3. {"data": null, "errors": [...]}            → None is not subscriptable
+    try:
+        data = json.loads(result.stdout) if result.stdout.strip() else {}
+    except json.JSONDecodeError as e:
+        print(f"❌ Linear comment failed: non-JSON response: {e}", file=sys.stderr)
+        return None
+
     if data.get("errors"):
         print(f"❌ Linear comment failed: {data['errors']}", file=sys.stderr)
         return None
-    comment_id = data["data"]["commentCreate"]["comment"]["id"]
+
+    payload = data.get("data") or {}
+    comment = (payload.get("commentCreate") or {}).get("comment") or {}
+    comment_id = comment.get("id")
+    if not comment_id:
+        print(f"❌ Linear comment failed: unexpected response shape: {data}", file=sys.stderr)
+        return None
+
     print(f"✅ Linear comment posted to {issue_id} (id: {comment_id[:8]}...)")
     return comment_id
 
