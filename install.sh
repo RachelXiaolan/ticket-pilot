@@ -32,6 +32,11 @@ TARGETS=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --agent)
+      if [ $# -lt 2 ]; then
+        echo "Error: --agent requires an argument"
+        echo "Usage: install.sh --agent claude,codex,hermes"
+        exit 1
+      fi
       TARGETS="$2"
       shift 2
       ;;
