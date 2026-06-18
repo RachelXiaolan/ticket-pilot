@@ -69,12 +69,20 @@ def github_comment(issue_num: str, repo: str, body: str) -> bool:
         print("⚠️  No GitHub issue/repo specified — skipping GitHub mirror", file=sys.stderr)
         return False
 
-    result = subprocess.run(
-        ["gh", "issue", "comment", issue_num,
-         "--repo", repo,
-         "--body", body],
-        capture_output=True, text=True, timeout=15
-    )
+    try:
+        result = subprocess.run(
+            ["gh", "issue", "comment", issue_num,
+             "--repo", repo,
+             "--body", body],
+            capture_output=True, text=True, timeout=15
+        )
+    except FileNotFoundError:
+        print("❌ GitHub comment failed: gh CLI not found", file=sys.stderr)
+        return False
+    except subprocess.TimeoutExpired:
+        print("❌ GitHub comment failed: gh CLI timed out after 15s", file=sys.stderr)
+        return False
+
     if result.returncode != 0:
         print(f"❌ GitHub comment failed: {result.stderr}", file=sys.stderr)
         return False
@@ -98,8 +106,11 @@ def main() -> None:
     # GitHub gets a mirrored version with Linear link
     gh_body = f"{args.emoji} **{args.title}** *(mirrored from Linear {args.linear_id})*\n\n{args.body}"
 
-    linear_comment(args.linear_id, linear_body)
-    github_comment(args.gh_issue, args.repo, gh_body)
+    linear_ok = linear_comment(args.linear_id, linear_body)
+    gh_ok = github_comment(args.gh_issue, args.repo, gh_body)
+
+    if not linear_ok and not gh_ok:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
