@@ -9,8 +9,26 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
+
+_LINEAR_ISSUE_ID_RE = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
+
+
+def _validate_issue_id(issue_id: str) -> str:
+    """Validate that issue_id matches Linear's TEAM-N format and reject anything else.
+
+    Linear issue identifiers always look like "AI-1972" (uppercase team key + dash + number).
+    Allowing arbitrary input here caused path-concatenation issues: an id of
+    "AI-1/sub/../foo" silently created nested subdirectories under --root instead of
+    failing fast, producing a confusing task layout.
+    """
+    if not _LINEAR_ISSUE_ID_RE.match(issue_id):
+        raise SystemExit(
+            f"error: invalid Linear issue id {issue_id!r}; expected format like 'AI-1972'"
+        )
+    return issue_id
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,7 +43,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    issue_id = args.issue_id.upper()
+    issue_id = _validate_issue_id(args.issue_id.upper())
     task_dir = Path(args.root) / issue_id
     logs_dir = task_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
