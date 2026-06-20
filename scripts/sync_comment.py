@@ -47,18 +47,38 @@ def linear_comment(issue_id: str, body: str) -> str | None:
         }
     }
 
-    result = subprocess.run(
-        ["curl", "-s", "-X", "POST", "https://api.linear.app/graphql",
-         "-H", f"Authorization: {key}",
-         "-H", "Content-Type: application/json",
-         "-d", json.dumps({"query": query, "variables": variables})],
-        capture_output=True, text=True, timeout=15
-    )
-    data = json.loads(result.stdout)
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-X", "POST", "https://api.linear.app/graphql",
+             "-H", f"Authorization: {key}",
+             "-H", "Content-Type: application/json",
+             "-d", json.dumps({"query": query, "variables": variables})],
+            capture_output=True, text=True, timeout=15
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print(f"❌ Linear comment request failed: {exc}", file=sys.stderr)
+        return None
+
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip() or "curl exited non-zero"
+        print(f"❌ Linear comment failed: {detail}", file=sys.stderr)
+        return None
+
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        snippet = result.stdout[:200].replace("\n", "\\n")
+        print(f"❌ Linear comment returned invalid JSON: {exc}: {snippet}", file=sys.stderr)
+        return None
+
     if data.get("errors"):
         print(f"❌ Linear comment failed: {data['errors']}", file=sys.stderr)
         return None
-    comment_id = data["data"]["commentCreate"]["comment"]["id"]
+    try:
+        comment_id = data["data"]["commentCreate"]["comment"]["id"]
+    except (KeyError, TypeError) as exc:
+        print(f"❌ Linear comment response missing comment id: {exc}", file=sys.stderr)
+        return None
     print(f"✅ Linear comment posted to {issue_id} (id: {comment_id[:8]}...)")
     return comment_id
 
